@@ -1,3 +1,6 @@
+.env
 /node_modules
+/api
 /design
-/deploy.txt
+deploy.txt
+develop.txt

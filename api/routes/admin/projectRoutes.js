@@ -113,7 +113,7 @@ router.post("/assignUsersToProject", verify, (req, res) => __awaiter(this, void 
                             docAdmin.personal[i].assignedProjects[j].id) {
                             res.send(docAdmin.personal);
                             console.log("repe nothing happen here");
-                            break;
+                            return;
                         }
                     }
                     // asignar usuario para el proyecto
@@ -140,8 +140,6 @@ router.post("/deleteAssignedProject", verify, (req, res) => __awaiter(this, void
     try {
         const objContext = {
             reqUserIdVerify: req.user._id,
-            reqBodyName: req.body.name,
-            reqBodyDescription: req.body.description,
             reqBodyProjectId: req.body.projectId,
             reqBodyUserId: req.body.userId
         };
@@ -165,7 +163,9 @@ router.post("/deleteAssignedProject", verify, (req, res) => __awaiter(this, void
             }
         }
     }
-    catch (error) { }
+    catch (error) {
+        console.log(error);
+    }
 }));
 router.get("/myProjects", verify, (req, res) => __awaiter(this, void 0, void 0, function* () {
     try {
@@ -174,24 +174,6 @@ router.get("/myProjects", verify, (req, res) => __awaiter(this, void 0, void 0, 
         };
         const docAdmin = yield mongoose_1.Admin.findById(objContext.reqUserIdVerify);
         res.status(200).json(docAdmin.projects);
-    }
-    catch (err) {
-        res.status(400).send(err);
-    }
-}));
-router.post("/getProjectById", verify, (req, res) => __awaiter(this, void 0, void 0, function* () {
-    console.log("yea");
-    try {
-        const objContext = {
-            reqUserIdVerify: req.user._id
-        };
-        const docAdmin = yield mongoose_1.Admin.findById(objContext.reqUserIdVerify);
-        for (let i = 0; i < docAdmin.projects.length; i++) {
-            if (docAdmin.projects[i]._id == req.body.projectId) {
-                res.status(200).json(docAdmin.projects[i]);
-                break;
-            }
-        }
     }
     catch (err) {
         res.status(400).send(err);

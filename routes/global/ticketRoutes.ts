@@ -107,6 +107,7 @@ router.post("/updateTicketById", verify, async (req: any, res: Response) => {
             console.log("UPDATED TIcket ");
           } catch (err) {
             res.status(400).send(err);
+            console.log(err);
           }
           return;
         }
@@ -129,6 +130,7 @@ router.post("/updateTicketById", verify, async (req: any, res: Response) => {
           console.log("updated TIcket ");
         } catch (err) {
           res.status(400).send(err);
+          console.log(err);
         }
         return;
       }
@@ -148,7 +150,7 @@ router.post("/getTicketById", verify, async (req: any, res: Response) => {
   for (let i = 0; i < docAdmin.projects.length; i++) {
     for (let j = 0; j < docAdmin.projects[i].tickets.length; j++) {
       if (docAdmin.projects[i].tickets[j]._id == req.body.ticketId) {
-        console.log(docAdmin.projects[i].tickets[j]);
+        // console.log(docAdmin.projects[i].tickets[j]);
         try {
           await docAdmin.save();
           res.send(docAdmin.projects[i].tickets[j]);
@@ -350,8 +352,6 @@ router.post("/assignTicketToDev", verify, async (req: any, res: Response) => {
             // console.log(docAdmin);
 
             //////////////Add History ///////////////////////
-
-            //////////////Add Histoy ///////////////////////
 
             docAdmin.projects[i].tickets[j]["assignedDeveloper"] = {
               devId: req.body.devId,

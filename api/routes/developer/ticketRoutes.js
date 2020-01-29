@@ -44,6 +44,19 @@ router.post("/updateTicketStatusByDev", verify, (req, res) => __awaiter(this, vo
     for (let i = 0; i < docData.projects.length; i++) {
         for (let j = 0; j < docData.projects[i].tickets.length; j++) {
             if (docData.projects[i].tickets[j]._id == req.body.ticketId) {
+                //////////////Add Histoy ///////////////////////
+                const history = new mongoose_1.History({
+                    property: "Change Status ",
+                    oldValue: docData.projects[i].tickets[j].status,
+                    newValue: req.body.status,
+                    dateChange: new Date().toLocaleString(),
+                    metaData: [{ devId: req.user._id }]
+                });
+                // console.log(history);
+                docData.projects[i].tickets[j].historial.push(history);
+                yield docData.save();
+                // console.log(docAdmin);
+                //////////////Add History ///////////////////////
                 docData.projects[i].tickets[j].status = req.body.status;
                 try {
                     yield docData.save();

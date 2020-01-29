@@ -41,6 +41,10 @@ router.post("/addPersonel", verify, async (req: any, res: Response) => {
   const { error } = registerValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
+  const emailExistAdmin = await Admin.findOne({ email: req.body.email });
+
+  if (emailExistAdmin) return res.status(400).send("Email already exist");
+
   const emailExist = await Admin.findOne({
     personal: { $elemMatch: { email: req.body.email } }
   });

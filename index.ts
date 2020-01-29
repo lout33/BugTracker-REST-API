@@ -1,4 +1,4 @@
-require('dotenv').config()
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const accountGlobalRoutes = require("./routes/global/accountRoutes");
+const projectGlobalRoutes = require("./routes/global/projectRoutes");
 const ticketGlobalRoutes = require("./routes/global/ticketRoutes");
 
 const projectAdminRoutes = require("./routes/admin/projectRoutes");
@@ -22,7 +23,7 @@ const authRoutes = require("./routes/auth/authRoutes");
 
 let puerto = process.env.PORT || 3000;
 mongoose.connect(
-  process.env.DB_CONNECT  ,
+  process.env.DB_CONNECT,
   { useNewUrlParser: true, useUnifiedTopology: true },
   () => console.log("connecte to db")
 );
@@ -46,6 +47,7 @@ app.use("/api/manager/project", projectManagerRoutes);
 app.use("/api/manager/ticket", ticketManagerRoutes);
 
 app.use("/api/global/account", accountGlobalRoutes);
+app.use("/api/global/project", projectGlobalRoutes);
 app.use("/api/global/ticket", ticketGlobalRoutes);
 
 app.listen(puerto, () => console.log("server Up and running: " + puerto));

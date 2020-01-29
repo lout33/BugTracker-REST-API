@@ -42,6 +42,9 @@ router.post("/addPersonel", verify, (req, res) => __awaiter(this, void 0, void 0
     const { error } = validation_1.registerValidation(req.body);
     if (error)
         return res.status(400).send(error.details[0].message);
+    const emailExistAdmin = yield mongoose_1.Admin.findOne({ email: req.body.email });
+    if (emailExistAdmin)
+        return res.status(400).send("Email already exist");
     const emailExist = yield mongoose_1.Admin.findOne({
         personal: { $elemMatch: { email: req.body.email } }
     });

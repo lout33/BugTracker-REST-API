@@ -69,12 +69,18 @@ router.post("/login", (req, res) => __awaiter(this, void 0, void 0, function* ()
     }
 }));
 //ADMIN  ------------------------------------->
-router.post("/register", (req, res) => __awaiter(this, void 0, void 0, function* () {
+exports.registerUser = router.post("/register", (req, res) => __awaiter(this, void 0, void 0, function* () {
     const { error } = validation_1.registerValidation(req.body);
     if (error)
         return res.status(400).send(error.details[0].message);
     const emailExist = yield mongoose_1.Admin.findOne({ email: req.body.email });
     if (emailExist)
+        return res.status(400).send("Email already exist");
+    //  and via gmail.
+    const emailExistPersonnel = yield mongoose_1.Admin.findOne({
+        personal: { $elemMatch: { email: req.body.email } }
+    });
+    if (emailExistPersonnel)
         return res.status(400).send("Email already exist");
     var salt = bcrypt.genSaltSync(10);
     var hashedPasword = bcrypt.hashSync(req.body.password, salt);
@@ -90,6 +96,8 @@ router.post("/register", (req, res) => __awaiter(this, void 0, void 0, function*
         console.log("usuario creado");
     }
     catch (err) {
+        console.log(err);
+        console.log("error al validar al usuario");
         res.status(400).send(err);
     }
 }));

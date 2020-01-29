@@ -97,7 +97,6 @@ router.post(
     try {
       const objContext = {
         reqUserIdVerify: req.user._id,
-
         reqBodyProjectId: req.body.projectId,
         reqBodyUserId: req.body.userId
       };
@@ -128,7 +127,7 @@ router.post(
               ) {
                 res.send(docAdmin.personal);
                 console.log("repe nothing happen here");
-                break;
+                return;
               }
             }
 
@@ -160,8 +159,6 @@ router.post(
     try {
       const objContext = {
         reqUserIdVerify: req.user._id,
-        reqBodyName: req.body.name,
-        reqBodyDescription: req.body.description,
         reqBodyProjectId: req.body.projectId,
         reqBodyUserId: req.body.userId
       };
@@ -187,7 +184,9 @@ router.post(
           }
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -199,26 +198,6 @@ router.get("/myProjects", verify, async (req: any, res: Response) => {
     const docAdmin = await Admin.findById(objContext.reqUserIdVerify);
 
     res.status(200).json(docAdmin.projects);
-  } catch (err) {
-    res.status(400).send(err);
-  }
-});
-
-router.post("/getProjectById", verify, async (req: any, res: Response) => {
-  console.log("yea");
-
-  try {
-    const objContext = {
-      reqUserIdVerify: req.user._id
-    };
-    const docAdmin = await Admin.findById(objContext.reqUserIdVerify);
-
-    for (let i = 0; i < docAdmin.projects.length; i++) {
-      if (docAdmin.projects[i]._id == req.body.projectId) {
-        res.status(200).json(docAdmin.projects[i]);
-        break;
-      }
-    }
   } catch (err) {
     res.status(400).send(err);
   }

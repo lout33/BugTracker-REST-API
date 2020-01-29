@@ -34,5 +34,8 @@ export var ticketSchema = new mongoose.Schema({
   createdAt: {
     type: String
   },
+  updatedAt: {
+    type: String
+  },
   historial: [historySchema]
 });

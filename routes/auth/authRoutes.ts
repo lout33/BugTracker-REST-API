@@ -52,7 +52,6 @@ router.post("/login", async (req: Request, res: Response) => {
             const tokenNoAdmin = jwt.sign(
               { _id: adminpersonel.personal[i]._id },
               process.env.TOKEN_SECRET
-              
             );
 
             res.header("auth-token", tokenNoAdmin).send(tokenNoAdmin);
@@ -81,31 +80,42 @@ router.post("/login", async (req: Request, res: Response) => {
 });
 //ADMIN  ------------------------------------->
 
-router.post("/register", async (req: Request, res: Response) => {
-  const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+export let registerUser = router.post(
+  "/register",
+  async (req: Request, res: Response) => {
+    const { error } = registerValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  const emailExist = await Admin.findOne({ email: req.body.email });
+    const emailExist = await Admin.findOne({ email: req.body.email });
 
-  if (emailExist) return res.status(400).send("Email already exist");
+    if (emailExist) return res.status(400).send("Email already exist");
 
-  var salt = bcrypt.genSaltSync(10);
-  var hashedPasword = bcrypt.hashSync(req.body.password, salt);
+    //  and via gmail.
+    const emailExistPersonnel = await Admin.findOne({
+      personal: { $elemMatch: { email: req.body.email } }
+    });
+    if (emailExistPersonnel) return res.status(400).send("Email already exist");
 
-  const admin = new Admin({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPasword
-  });
+    var salt = bcrypt.genSaltSync(10);
+    var hashedPasword = bcrypt.hashSync(req.body.password, salt);
 
-  try {
-    const savedUser = await admin.save();
-    const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET);
-    res.header("auth-token", token).send(token);
-    console.log("usuario creado");
-  } catch (err) {
-    res.status(400).send(err);
+    const admin = new Admin({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPasword
+    });
+
+    try {
+      const savedUser = await admin.save();
+      const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET);
+      res.header("auth-token", token).send(token);
+      console.log("usuario creado");
+    } catch (err) {
+      console.log(err);
+      console.log("error al validar al usuario");
+      res.status(400).send(err);
+    }
   }
-});
+);
 
 module.exports = router;
