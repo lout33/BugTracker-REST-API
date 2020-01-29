@@ -1,6 +1,4 @@
-.env
 /node_modules
-/api
 /design
 deploy.txt
 develop.txt
